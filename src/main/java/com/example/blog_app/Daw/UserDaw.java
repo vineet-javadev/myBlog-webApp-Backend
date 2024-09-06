@@ -3,8 +3,6 @@ package com.example.blog_app.Daw;
 
 // import java.sql.Blob;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.example.blog_app.Entities.UserEntity;
 
