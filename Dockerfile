@@ -1,8 +1,23 @@
-FROM maven:3.8.5-openjdk-17 AS build
-COPY . .
-RUN mvn clean package -DskipTasts
+# Use an official OpenJDK 17 image as a base (latest LTS version)
+FROM openjdk:17-jdk-alpine
 
-FROM openjdk:17.0.1-jdk-slim
-COPY --from=build /target/blog_app-0.0.1-SNAPSHOT.jar blog_app.jar
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy the pom.xml file
+COPY pom.xml .
+
+# Download the dependencies
+RUN mvn dependency:go-offline -B
+
+# Copy the application code
+COPY . .
+
+# Build the application
+RUN mvn clean package -Dmaven.javadoc.skip=true
+
+# Expose the port the application will use
 EXPOSE 8082
-ENTRYPOINT [ "java" , "-jar" , "blog_app.jar" ]
+
+# Run the command to start the application
+CMD ["java", "-jar", "target/blog_app.jar"]
